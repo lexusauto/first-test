@@ -1,6 +1,7 @@
 package ru.bulgakov.qa;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -9,6 +10,7 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SearchTest {
 
@@ -91,9 +93,8 @@ public class SearchTest {
     $$(".menu-popup__list-dividered li").findBy(text("Магазины")).click();
     sleep(200);
     $("#search-stores").setValue("Владивосток");
-    $(".stores-item .stores-item__title").shouldHave(text("Калина Молл"));
-    //$(".stores-item").$("[itemprop=streetAddress]").shouldHave(text("Калина Молл"));
-    //$("[itemprop=name]").shouldHave(text("Калина Молл"), Duration.ofSeconds(3));
+    ElementsCollection stores= $$("p.stores-item__title").filter(text("Калина Молл"));
+    assertEquals(1, stores.size());
 
 }
 }
