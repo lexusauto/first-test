@@ -2,7 +2,12 @@ package ru.bulgakov.qa;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import pages.WelcomePage;
+import pages.YandexSearchPage;
+import pages.YandexSearchResultsPage;
 
 import java.time.Duration;
 
@@ -15,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SearchTest {
 
 @Test
+@DisplayName("Валдиация стоимости обучения. 47000 руб.")
+@Tag("Positive")
   void check47kTest(){
     /*
     * ТК - проверить, что предоплата по обучению 47к
@@ -29,32 +36,17 @@ public class SearchTest {
      */
     Configuration.pageLoadTimeout=10000;//таймаут для прогрузки страницы
     Configuration.timeout=10000;//таймаут для прогрузки элемента
-    Configuration.holdBrowserOpen=true;
-    open("https://ya.ru/");
-    $("#text").setValue("bulgakov qa");
-    $("[type=submit]").click();
-    sleep(1000);
-    if ($(".DistributionButtonClose_view_button").exists()){
-    $(".DistributionButtonClose_view_button").click();
-    }
-    sleep(2000);
-    if ($(".DistributionSplashScreenModalCloseButtonBeside").exists()){
-        $(".DistributionSplashScreenModalCloseButtonBeside").click();
-    }
-    sleep(2000);
-    if ($("button.DistributionButtonClose_view_cross").exists()){
-        $("button.DistributionButtonClose_view_cross").click();
-    }
-    //$("button.DistributionButtonClose_view_cross").click();
-    //$("button.DistributionButtonClose_view_button").click();
-    $(byText("ivanbulgakovqa.ru")).click();
-    switchTo().window(1);
-    $$(".t-menu__list li").get(4).click();
-    //$(byText("Хочу вкатиться в QA")).click();
-    $x("/html/body/div[1]/div[42]/div/div/div[32]/div/a").click();
-    $(byText("Бегу оплачивать")).click();
-    switchTo().window(2);
-    $(".styles-module-scss-module__t92_WG__price").shouldHave(text("₽ 47 000.00"));
+    //Configuration.holdBrowserOpen=true;
+
+    open("https://ya.ru/", YandexSearchPage.class)//строка поиска
+    .search("bulgakov qa")
+    .knopka()
+    .closeDefaultBrowserSelectWindows()
+    .openLink("ivanbulgakovqa.ru")
+    .clickOnCost()
+    .clickOnWantToRollIn()
+    .clickOnRunToPay()
+    .educationCostValidation("₽ 47 000.00");
 }
 
 @Test
