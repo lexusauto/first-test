@@ -11,10 +11,24 @@ public class YandexSearchResultsPage {
     private final SelenideElement secondWindow =$(".DistributionSplashScreenModalCloseButtonBeside");
     private final SelenideElement thirdWindow =$("button.DistributionButtonClose_view_cross");
 
-    public WelcomePage openLink(String webSiteName){
+    public <T> T openLink(String webSiteName, Class<T> pageClass){
         $(byText(webSiteName)).click();
-        switchTo().window(1);
-        return new WelcomePage();
+        try {
+            return pageClass.getDeclaredConstructor().newInstance();
+        }
+        catch (Exception error) {
+            throw new RuntimeException("Ошибка создания объекта", error);
+        }
+    }
+
+    public <T> T switchToWindow(int index, Class<T> pageClass){
+        switchTo().window(index);
+        try {
+            return pageClass.getDeclaredConstructor().newInstance();
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Ошибка создания объекта", e);
+        }
     }
 
     public YandexSearchResultsPage closeDefaultBrowserSelectWindows(){

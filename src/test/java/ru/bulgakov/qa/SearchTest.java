@@ -1,5 +1,6 @@
 package ru.bulgakov.qa;
 
+import MyTestPages.WelcomePageShop;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +43,11 @@ public class SearchTest {
     .search("bulgakov qa")
     .knopka()
     .closeDefaultBrowserSelectWindows()
-    .openLink("ivanbulgakovqa.ru")
+    .openLink("ivanbulgakovqa.ru",YandexSearchResultsPage.class)/*Здесь можно было бы остановить цепочку и
+      сделать отдельную команду switchTo и начать новую цепочку на новой странице WelcomePage. Но сделал так, чтобы потренироваться.
+      */
+    .switchToWindow(1, WelcomePage.class)
+
     .clickOnCost()
     .clickOnWantToRollIn()
     .clickOnRunToPay()
@@ -64,29 +69,14 @@ public class SearchTest {
     Configuration.pageLoadTimeout=10000;
     Configuration.timeout=10000;
     Configuration.holdBrowserOpen=true;
-    open("https://maag-fashion.com/");
-    sleep(1000);
-    if ($(".cookie-notification__control--accept").exists()){
-        $(".cookie-notification__control--accept").click();
-    }
-    if ($(".city-select__dropdown").exists()){
-        $(".city-select__dropdown-city").click();
-        $$(".city-select__dropdown-item").findBy(text("Владивосток")).click();
-        sleep(200);
-        $(".city-select__dropdown-select").click();
-    } else {
-        $(".header__buttons-block").$(".city-select__icon").click();
-        $(".city-select__dropdown-city").click();
-        $$(".city-select__dropdown-item").findBy(text("Владивосток")).click();
-        sleep(200);
-        $(".city-select__dropdown-select").click();
-    }
-    $(".menu-trigger").click();
-    $$(".menu-popup__list-dividered li").findBy(text("Магазины")).click();
-    sleep(200);
-    $("#search-stores").setValue("Владивосток");
-    ElementsCollection stores= $$("p.stores-item__title").filter(text("Калина Молл"));
-    assertEquals(1, stores.size());
+
+    open("https://maag-fashion.com/", WelcomePageShop.class)
+    .closeCookieWindow()
+    .choiseCityForOrderWindow("Владивосток")
+    .openOrCloseMenu()
+    .openShopLocations()
+    .setValueCityLocation("Владивосток")
+    .validateDisplayShop("Калина Молл");
 
 }
 }
