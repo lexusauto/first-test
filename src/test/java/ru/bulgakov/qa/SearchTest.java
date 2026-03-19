@@ -8,20 +8,17 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.WelcomePage;
 import pages.YandexSearchPage;
-import pages.YandexSearchResultsPage;
 
-import java.time.Duration;
-
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SearchTest {
 
+private static final String YANDEX_URL = "https://ya.ru/";
+private static final String MAAG_FASHION_URL = "https://maag-fashion.com/";
+
 @Test
-@DisplayName("Валдиация стоимости обучения. 47000 руб.")
+@DisplayName("Валидация стоимости обучения. 47000 руб.")
 @Tag("Positive")
   void check47kTest(){
     /*
@@ -37,15 +34,12 @@ public class SearchTest {
      */
     Configuration.pageLoadTimeout=10000;//таймаут для прогрузки страницы
     Configuration.timeout=10000;//таймаут для прогрузки элемента
-    //Configuration.holdBrowserOpen=true;
 
-    open("https://ya.ru/", YandexSearchPage.class)//строка поиска
+    open(YANDEX_URL, YandexSearchPage.class)//строка поиска
     .search("bulgakov qa")
     .knopka()
     .closeDefaultBrowserSelectWindows()
-    .openLink("ivanbulgakovqa.ru",YandexSearchResultsPage.class)/*Здесь можно было бы остановить цепочку и
-      сделать отдельную команду switchTo и начать новую цепочку на новой странице WelcomePage. Но сделал так, чтобы потренироваться.
-      */
+    .openLink("ivanbulgakovqa.ru")
     .switchToWindow(1, WelcomePage.class)
 
     .clickOnCost()
@@ -55,7 +49,7 @@ public class SearchTest {
 }
 
 @Test
-    void ShopExistVladivostok(){
+    void shopExistVladivostok(){
     /*
      * ТК - проверить, что в maag-fashion.com/stores/ отображается магазин "Калина Молл" после введения значения "Владивосток" в поле
      * 1. Открыть сайт
@@ -68,15 +62,15 @@ public class SearchTest {
      */
     Configuration.pageLoadTimeout=10000;
     Configuration.timeout=10000;
-    Configuration.holdBrowserOpen=true;
 
-    open("https://maag-fashion.com/", WelcomePageShop.class)
-    .closeCookieWindow()
-    .choiseCityForOrderWindow("Владивосток")
-    .openOrCloseMenu()
-    .openShopLocations()
-    .setValueCityLocation("Владивосток")
-    .validateDisplayShop("Калина Молл");
+    ElementsCollection foundStores = open(MAAG_FASHION_URL, WelcomePageShop.class)
+        .closeCookieWindow()
+        .chooseCityForOrderWindow("Владивосток")
+        .openOrCloseMenu()
+        .openShopLocations()
+        .setValueCityLocation("Владивосток")
+        .getStoresByName("Калина Молл");
 
+    assertEquals(1, foundStores.size());
 }
 }
