@@ -1,4 +1,4 @@
-package MyTestPages;
+package ru.bulgakov.qa.MyTestPages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;

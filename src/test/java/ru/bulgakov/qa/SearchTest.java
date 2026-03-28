@@ -1,13 +1,13 @@
 package ru.bulgakov.qa;
 
-import MyTestPages.WelcomePageShop;
+import ru.bulgakov.qa.MyTestPages.WelcomePageShop;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import pages.WelcomePage;
-import pages.YandexSearchPage;
+import ru.bulgakov.qa.pages.WelcomePage;
+import ru.bulgakov.qa.pages.YandexSearchPage;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
