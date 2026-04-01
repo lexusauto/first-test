@@ -7,9 +7,6 @@ import webshop.Steps.AuthSteps;
 import webshop.wspages.WsCartPage;
 import webshop.wspages.WsDesktopProductPage;
 import webshop.wspages.WsWelcomePage;
-
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static webshop.Config.Config.WEBSHOP_URL;
@@ -28,13 +25,12 @@ private final AuthSteps authSteps = new AuthSteps();
 void addItemToCartTest() {
 
 Configuration.timeout=5000;
-Configuration.holdBrowserOpen=true;
 
 WsDesktopProductPage productPage = open(WEBSHOP_URL, WsWelcomePage.class)
     .clickOnComputers_Desktops()
     .clickOnProductDesktop(0)//Выбираем продукт из списка по его индексу на странице
-    .selectProcessor(0)
-    .setQuantity("2")
+    .selectProcessor(2)
+    .setQuantity("5")
     .addToCart()
     .addToCartValidation()
     .shopCartQuantityValidation();

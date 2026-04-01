@@ -22,6 +22,9 @@ public class WsDesktopProductPage {
     private String savedItemName;
     private String savedPriceName;
     private String savedQuantity;
+    private float selectedPrice;
+
+    private final int[] processorPrices = {0, 15, 100};
 
     public WsDesktopProductPage setQuantity(String quantity) {
         this.savedQuantity=quantity;
@@ -31,7 +34,7 @@ public class WsDesktopProductPage {
 
     public WsDesktopProductPage addToCart() {
         savedItemName=itemName.getText();
-        savedPriceName=itemPrice.getText();
+        savedPriceName=String.valueOf(Float.parseFloat(itemPrice.getText())+selectedPrice);
         addToCartButton.click();
         return this;
     }
@@ -48,6 +51,7 @@ public class WsDesktopProductPage {
 
     public WsDesktopProductPage selectProcessor(int index) {
         attributesForDesktopComputer.get(index).click();
+        this.selectedPrice=processorPrices[index];
         return this;
     }
 
