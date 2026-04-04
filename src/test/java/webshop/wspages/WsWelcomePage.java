@@ -11,19 +11,19 @@ import static com.codeborne.selenide.Selenide.$$;
 public class WsWelcomePage {
 
     private final SelenideElement registerButton = $("a.ico-register");
-    private final SelenideElement loginButton =$("a.ico-login");
+    private final SelenideElement loginButton = $("a.ico-login");
     private final ElementsCollection emailHeader = $$("div.header-links ul li a");
     private final ElementsCollection computerProducts = $$("ul.top-menu li a");
-    private final SelenideElement computerProductsDesktops = $(byText("Desktops"));
+    private final SelenideElement desktopsLink = $(byText("Desktops"));
 
-    public WsRegistrationPage clickRegisterButton(){
-       registerButton.click();
+    public WsRegistrationPage clickRegisterButton() {
+        registerButton.click();
         return new WsRegistrationPage();
     }
 
     public WsLoginPage clickLoginButton() {
-      loginButton.click();
-      return new WsLoginPage();
+        loginButton.click();
+        return new WsLoginPage();
     }
 
     public WsWelcomePage checkUserLoggedIn(String email) {
@@ -31,9 +31,13 @@ public class WsWelcomePage {
         return this;
     }
 
-    public WsComputers_DesktopsPage clickOnComputers_Desktops() {
+    public WsWelcomePage hoverComputersMenu() {
         computerProducts.get(1).hover();
-        computerProductsDesktops.click();
-        return new WsComputers_DesktopsPage();
+        return this;
+    }
+
+    public WsDesktopsPage selectDesktops() {
+        desktopsLink.click();
+        return new WsDesktopsPage();
     }
 }

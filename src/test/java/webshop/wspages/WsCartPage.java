@@ -2,7 +2,6 @@ package webshop.wspages;
 
 import com.codeborne.selenide.SelenideElement;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
 public class WsCartPage {
@@ -11,18 +10,15 @@ public class WsCartPage {
     private final SelenideElement quantityInput = $("input.qty-input");
     private final SelenideElement sumTotal = $("span.product-subtotal");
 
-    public WsCartPage validationProductName(String expectedProduct) {
-        productName.shouldHave(text(expectedProduct));
-        return this;
+    public String getItemName() {
+        return productName.getText();
     }
 
-    public String getQuantityValue() {
-
+    public String getQuantity() {
         return quantityInput.getAttribute("value");
     }
 
-    public String  getSumTotalValue() {
-
+    public String getSubtotal() {
         return sumTotal.getText();
     }
 }
