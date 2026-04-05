@@ -11,18 +11,15 @@ public class WsCartPage {
     private final SelenideElement quantityInput = $("input.qty-input");
     private final SelenideElement sumTotal = $("span.product-subtotal");
 
-    public WsCartPage validationProductName(String expectedProduct) {
-        productName.shouldHave(text(expectedProduct));
-        return this;
+    public String getItemName() {
+        return productName.getText();
     }
 
     public String getQuantityValue() {
-
         return quantityInput.getAttribute("value");
     }
 
-    public String  getSumTotalValue() {
-
+    public String getSumTotalValue() {
         return sumTotal.getText();
     }
 }

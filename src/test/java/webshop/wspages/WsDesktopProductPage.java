@@ -13,63 +13,47 @@ public class WsDesktopProductPage {
     private final SelenideElement itemPrice = $("[itemprop=price]");
     private final SelenideElement quantityInput = $("input.qty-input");
     private final SelenideElement addToCartButton = $("#add-to-cart-button-72");
-    private final SelenideElement barNotificationSuccesAdded=$("#bar-notification p.content");
+    private final SelenideElement sucessNotification = $("#bar-notification p.content");
     private final SelenideElement shoppingCartQuantity = $("span.cart-qty");
-    private final SelenideElement cartButton=$(".ico-cart");
+    private final SelenideElement cartButton = $(".ico-cart");
     private final ElementsCollection attributesForDesktopComputer = $$("dl dd ul li input");
 
-
-    private String savedItemName;
-    private String savedPriceName;
-    private String savedQuantity;
-    private float selectedPrice;
-
-    private final int[] processorPrices = {0, 15, 100};
-
     public WsDesktopProductPage setQuantity(String quantity) {
-        this.savedQuantity=quantity;
         quantityInput.setValue(quantity);
         return this;
     }
 
     public WsDesktopProductPage addToCart() {
-        savedItemName=itemName.getText();
-        savedPriceName=String.valueOf(Float.parseFloat(itemPrice.getText())+selectedPrice);
         addToCartButton.click();
         return this;
     }
 
     public WsDesktopProductPage addToCartValidation() {
-        barNotificationSuccesAdded.shouldHave(text("The product has been added to your "));
+        sucessNotification.shouldHave(text("The product has been added to your "));
         return this;
     }
 
-    public WsDesktopProductPage shopCartQuantityValidation() {
-        shoppingCartQuantity.shouldHave(text("("+savedQuantity+")"));
+    public WsDesktopProductPage shopCartQuantityValidation(String expectedQuantity) {
+        shoppingCartQuantity.shouldHave(text("(" + expectedQuantity + ")"));
         return this;
     }
 
     public WsDesktopProductPage selectProcessor(int index) {
         attributesForDesktopComputer.get(index).click();
-        this.selectedPrice=processorPrices[index];
         return this;
     }
 
-    public WsCartPage goToCartPage() {
+    public WsCartPage goToCart() {
         cartButton.click();
         return new WsCartPage();
     }
 
-    public String getSavedQuantity() {
-        return savedQuantity;
+    public String getItemName() {
+        return itemName.getText();
     }
 
-    public String getSavedItemName() {
-        return savedItemName;
-    }
-
-    public String getSavedPriceName() {
-        return savedPriceName;
+    public float getItemPrice() {
+        return Float.parseFloat(itemPrice.getText());
     }
 
 }

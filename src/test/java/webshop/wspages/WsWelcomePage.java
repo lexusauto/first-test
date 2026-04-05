@@ -31,8 +31,12 @@ public class WsWelcomePage {
         return this;
     }
 
-    public WsComputers_DesktopsPage clickOnComputers_Desktops() {
+    public WsWelcomePage hoverComputerProducts() {
         computerProducts.get(1).hover();
+        return this;
+    }
+
+    public WsComputers_DesktopsPage selectDesktops() {
         computerProductsDesktops.click();
         return new WsComputers_DesktopsPage();
     }
