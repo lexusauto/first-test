@@ -26,8 +26,6 @@ public class CartTest {
     @Test
     void addItemToCartTest() {
 
-        Configuration.holdBrowserOpen = true;
-
         int processorIndex = 2;
         String quantity = "3";
 
