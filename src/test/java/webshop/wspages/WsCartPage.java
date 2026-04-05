@@ -2,7 +2,6 @@ package webshop.wspages;
 
 import com.codeborne.selenide.SelenideElement;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
 public class WsCartPage {
@@ -15,11 +14,11 @@ public class WsCartPage {
         return productName.getText();
     }
 
-    public String getQuantityValue() {
+    public String getQuantity() {
         return quantityInput.getAttribute("value");
     }
 
-    public String getSumTotalValue() {
+    public String getTotalSum() {
         return sumTotal.getText();
     }
 }

@@ -48,9 +48,9 @@ public class CartTest {
 
         assertEquals(itemName, cartPage.getItemName());//Валдиация имение продукта
 
-        assertEquals(quantity, cartPage.getQuantityValue());//Валдиация количества продукта
+        assertEquals(quantity, cartPage.getQuantity());//Валдиация количества продукта
 
-        assertEquals(expectedSumTotal, Float.parseFloat(cartPage.getSumTotalValue()));//Валидация суммы продукта
+        assertEquals(expectedSumTotal, Float.parseFloat(cartPage.getTotalSum()));//Валидация суммы продукта
     }
 
     private float getProcessorPrice(int processorIndex) {
