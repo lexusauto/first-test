@@ -8,9 +8,7 @@ import webshop.wspages.WsCartPage;
 import webshop.wspages.WsDesktopProductPage;
 import webshop.wspages.WsWelcomePage;
 
-import static com.codeborne.selenide.Selenide.open;
-import static java.util.Locale.US;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static webshop.Config.Config.WEBSHOP_URL;
 
@@ -26,42 +24,42 @@ public class CartTest {
 
     @Test
     void addItemToCartTest() {
-        int processorIndex = 1;
+
+        int processorIndex = 2;
+        String quantity = "3";
 
         WsDesktopProductPage productPage = open(WEBSHOP_URL, WsWelcomePage.class)
-                .hoverComputersMenu()
+                .hoverComputerProducts()
                 .selectDesktops()
-                .selectProduct(0);
-
-        String itemName = productPage.getProductName();
-        String itemPrice = productPage.getProductPrice();
-        String itemQuantity = "5";
-
-        WsCartPage cartPage = productPage
+                .selectProduct(0)//Выбираем продукт из списка по его индексу на странице
                 .selectProcessor(processorIndex)
-                .setQuantity(itemQuantity)
+                .setQuantity(quantity)
                 .addToCart()
-                .checkSuccessNotification()
-                .checkQtyItemsInCart(itemQuantity)
-                .goToCart();
+                .addToCartValidation()
+                .shopCartQuantityValidation(quantity);
 
+        String itemName = productPage.getItemName();
+        float baseItemPrice = productPage.getItemPrice();
         float processorPrice = getProcessorPrice(processorIndex);
-        String expectedTotal = String.format(US, "%.2f",
-                (Float.parseFloat(itemPrice) + processorPrice) * Float.parseFloat(itemQuantity));
+        float expectedSumTotal = (baseItemPrice + processorPrice) * Float.parseFloat(quantity);
 
-        assertAll(
-                () -> assertEquals(itemName, cartPage.getItemName()),
-                () -> assertEquals(expectedTotal, cartPage.getSubtotal()),
-                () -> assertEquals(itemQuantity, cartPage.getQuantity())
-        );
+        WsCartPage cartPage = productPage.goToCart();
+
+        assertEquals(itemName, cartPage.getItemName());//Валдиация имение продукта
+
+        assertEquals(quantity, cartPage.getQuantity());//Валдиация количества продукта
+
+        assertEquals(expectedSumTotal, Float.parseFloat(cartPage.getTotalSum()));//Валидация суммы продукта
     }
 
     private float getProcessorPrice(int processorIndex) {
         return switch (processorIndex) {
-            case 0 -> 0f;
-            case 1 -> 15f;
-            case 2 -> 100f;
-            default -> throw new IllegalArgumentException("Unknown processor index: " + processorIndex);
+            case 0 -> 0f;      // slow - без надбавки
+            case 1 -> 15f;     // medium - +15$
+            case 2 -> 100f;    // fast - +100$
+            default -> throw new IllegalArgumentException(
+                    "Unknown processor index: " + processorIndex);
         };
     }
+
 }

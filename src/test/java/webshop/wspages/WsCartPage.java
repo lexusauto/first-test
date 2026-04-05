@@ -18,7 +18,7 @@ public class WsCartPage {
         return quantityInput.getAttribute("value");
     }
 
-    public String getSubtotal() {
+    public String getTotalSum() {
         return sumTotal.getText();
     }
 }

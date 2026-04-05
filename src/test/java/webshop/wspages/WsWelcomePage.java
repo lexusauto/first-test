@@ -31,13 +31,13 @@ public class WsWelcomePage {
         return this;
     }
 
-    public WsWelcomePage hoverComputersMenu() {
+    public WsWelcomePage hoverComputerProducts() {
         computerProducts.get(1).hover();
         return this;
     }
 
-    public WsDesktopsPage selectDesktops() {
-        desktopsLink.click();
-        return new WsDesktopsPage();
+    public WsComputers_DesktopsPage selectDesktops() {
+        computerProductsDesktops.click();
+        return new WsComputers_DesktopsPage();
     }
 }

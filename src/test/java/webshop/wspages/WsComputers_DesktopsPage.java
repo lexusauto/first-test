@@ -6,9 +6,9 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class WsComputers_DesktopsPage {
 
-private final ElementsCollection productDesktop = $$("div.product-grid div");
+    private final ElementsCollection productDesktop = $$("div.product-grid div");
 
-    public WsDesktopProductPage clickOnProductDesktop(int product) {
+    public WsDesktopProductPage selectProduct(int product) {
         productDesktop.get(product).click();
         return new WsDesktopProductPage();
     }
