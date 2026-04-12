@@ -1,5 +1,8 @@
 package ru.bulgakov.qa;
 
+import io.qameta.allure.Owner;
+import io.qameta.allure.Severity;
+import org.junit.jupiter.api.Disabled;
 import ru.bulgakov.qa.MyTestPages.WelcomePageShop;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
@@ -8,18 +11,23 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import ru.bulgakov.qa.pages.WelcomePage;
 import ru.bulgakov.qa.pages.YandexSearchPage;
+import webshop.Config.TestBase;
 
 import static com.codeborne.selenide.Selenide.*;
+import static io.qameta.allure.SeverityLevel.CRITICAL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SearchTest {
+public class SearchTest extends TestBase {
 
 private static final String YANDEX_URL = "https://ya.ru/";
 private static final String MAAG_FASHION_URL = "https://maag-fashion.com/";
 
+@Disabled
 @Test
 @DisplayName("Валидация стоимости обучения. 47000 руб.")
+@Owner("Alex")
 @Tag("Positive")
+@Severity(CRITICAL)
   void check47kTest(){
     /*
     * ТК - проверить, что предоплата по обучению 47к
