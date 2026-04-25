@@ -35,6 +35,7 @@ public class CartTest extends TestBase {
     @Tag("Positive")
     @Severity(CRITICAL)
     void addItemToCartTest() {
+        System.out.println(System.getProperty("run"));
 
         int processorIndex = 2;
         String quantity = "3";
