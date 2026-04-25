@@ -5,6 +5,7 @@ import io.qameta.allure.*;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import webshop.Config.TestBase;
 import webshop.wspages.WsWelcomePage;
@@ -27,6 +28,7 @@ private static final Faker faker = new Faker();
 @Story("Регистрация нового пользователя")
 @Link("https://maag-fashion.com/")
 @Description("бла бла бла")
+@Tags({@Tag("UI"), @Tag("positive")})
 void registrationTest() {
 
 Configuration.timeout=5000;

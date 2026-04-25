@@ -3,10 +3,7 @@ package webshop.tests;
 import com.codeborne.selenide.Configuration;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import webshop.Config.TestBase;
 import webshop.Steps.AuthSteps;
 import webshop.wspages.WsCartPage;
@@ -30,9 +27,9 @@ public class CartTest extends TestBase {
 
 
     @Test
+    @Tags({@Tag("UI"), @Tag("positive")})
     @DisplayName("Добавление товара в корзину и валдиация продукта, количества и итоговой суммы")
     @Owner("Alex")
-    //@Tag("Positive")
     @Severity(CRITICAL)
     void addItemToCartTest() {
         System.out.println(System.getProperty("run"));

@@ -43,6 +43,7 @@ public class LoginTest extends TestBase {
         }
 
         @Test
+        @Tags({@Tag("UI"), @Tag("positive")})
         @DisplayName("Успешная авторизация webshop")
         @Owner("Alex")
         //@Tag("Positive")
@@ -63,7 +64,7 @@ public class LoginTest extends TestBase {
 
     }
 
-
+    @Tags({@Tag("UI"), @Tag("negative")})
     @ParameterizedTest
     @DisplayName("Валидация сообщения об ошибке при некорректном пароле")
     @Owner("Alex")
