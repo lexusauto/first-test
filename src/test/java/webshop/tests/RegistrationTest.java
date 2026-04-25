@@ -20,7 +20,7 @@ private static final Faker faker = new Faker();
 @Test
 @DisplayName("Успешная регистрация нового пользователя")
 @Owner("Alex")
-@Tag("positive")
+//@Tag("positive")
 @Severity(CRITICAL)
 @Epic("Авторизация")
 @Feature("Регистрация")

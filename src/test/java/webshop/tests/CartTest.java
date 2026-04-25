@@ -32,7 +32,7 @@ public class CartTest extends TestBase {
     @Test
     @DisplayName("Добавление товара в корзину и валдиация продукта, количества и итоговой суммы")
     @Owner("Alex")
-    @Tag("Positive")
+    //@Tag("Positive")
     @Severity(CRITICAL)
     void addItemToCartTest() {
         System.out.println(System.getProperty("run"));

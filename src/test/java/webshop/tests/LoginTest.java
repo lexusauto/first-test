@@ -45,7 +45,7 @@ public class LoginTest extends TestBase {
         @Test
         @DisplayName("Успешная авторизация webshop")
         @Owner("Alex")
-        @Tag("Positive")
+        //@Tag("Positive")
         @Severity(CRITICAL)
         void succesLoginTest() {
             Configuration.timeout=5000;
@@ -68,7 +68,7 @@ public class LoginTest extends TestBase {
     @DisplayName("Валидация сообщения об ошибке при некорректном пароле")
     @Owner("Alex")
     @CsvFileSource(resources = "/email.csv")
-    @Tag("Negative")
+    //@Tag("Negative")
     @Severity(CRITICAL)
     void invalidEmailLoginest(String email) {
         open(WEBSHOP_LOGIN_URL, WsLoginPage.class)
