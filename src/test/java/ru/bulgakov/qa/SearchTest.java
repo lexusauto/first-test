@@ -26,7 +26,7 @@ private static final String MAAG_FASHION_URL = "https://maag-fashion.com/";
 @Test
 @DisplayName("Валидация стоимости обучения. 47000 руб.")
 @Owner("Alex")
-@Tag("Positive")
+//@Tag("Positive")
 @Severity(CRITICAL)
   void check47kTest(){
     /*
