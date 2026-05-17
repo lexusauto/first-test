@@ -1,8 +1,15 @@
 package booking.steps;
 
+import booking.dto.BookingApiClient;
+import booking.dto.BookingId;
 import booking.dto.CreateBookingDTO;
+import booking.dto.CreateBookingResponse;
 import io.qameta.allure.Step;
+import io.restassured.response.Response;
 import net.datafaker.Faker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -10,6 +17,33 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class BookingSteps {
 
     private static final Faker faker = new Faker();
+    private final BookingApiClient bookingClient = new BookingApiClient();
+
+    public CreateBookingResponse createBooking() {
+        return createBooking(randomBooking());
+    }
+
+    public CreateBookingResponse createBooking(CreateBookingDTO booking) {
+        Response createResp = bookingClient
+                .createBooking(booking);
+        assertThat(createResp.getStatusCode()).isEqualTo(200);
+
+        return createResp.as(CreateBookingResponse.class);
+    }
+
+    @Step("Сгенерировать {bookingQuantity} бронирований с фамилией {lastName}")
+    public List<Integer> generateBookings(int bookingQuantity, String lastName) {
+        List<Integer> bookingIds = new ArrayList<>();
+        for (int i = 0; i< bookingQuantity; i++) {
+            CreateBookingDTO createBookingDTO = randomBooking();
+            createBookingDTO.setLastname(lastName);
+            Integer bookingId = createBooking(createBookingDTO).getBookingid();
+
+            bookingIds.add(bookingId);
+
+        }
+        return bookingIds;
+    }
 
     @Step("Проверить соответствие всех полей в ответе")
     public static void bookingsShouldBeEqual(CreateBookingDTO expected, CreateBookingDTO actual) {
@@ -29,9 +63,18 @@ public class BookingSteps {
         );
     }
 
+    public static void bookingListShouldBeValid(List<BookingId> bookings, List<Integer> expectedBookingIds, Integer bookingQuantity) {
+        assertThat(bookings)
+                .hasSize(bookingQuantity)
+                .doesNotHaveDuplicates()
+                .doesNotContainNull()
+                .extracting(booking -> booking.bookingid())
+                .containsExactlyInAnyOrderElementsOf(expectedBookingIds);
+    }
 
 
-    public static CreateBookingDTO buildBookingRequest() {
+
+    public static CreateBookingDTO randomBooking() {
         return CreateBookingDTO.builder()
                 .firstname(faker.name().firstName())
                 .lastname(faker.name().lastName())

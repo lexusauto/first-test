@@ -2,18 +2,19 @@ package booking.Tests;
 
 import booking.config.BaseApiTest;
 import booking.config.BookingConfig;
-import booking.dto.AuthResponse;
-import booking.dto.BookingApiClient;
-import booking.dto.CreateBookingDTO;
-import booking.dto.CreateBookingResponse;
+import booking.dto.*;
 import booking.steps.BookingSteps;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+
 import static booking.config.BookingApiConfig.getBookingConfig;
-import static booking.steps.BookingSteps.buildBookingRequest;
+import static booking.steps.BookingSteps.randomBooking;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BookingTest extends BaseApiTest {
@@ -22,6 +23,7 @@ public class BookingTest extends BaseApiTest {
     private static final BookingConfig config = getBookingConfig();
 
     private final BookingApiClient bookingClient = new BookingApiClient();
+    private final BookingSteps bookingSteps = new BookingSteps();
 
     @Test
     @DisplayName("Успешная авторизация")
@@ -38,7 +40,7 @@ public class BookingTest extends BaseApiTest {
     @DisplayName("Успешный CreateBooking")
     void createBookingTest() {
 
-        CreateBookingDTO expectedBody = buildBookingRequest();
+        CreateBookingDTO expectedBody = randomBooking();
         Response response = bookingClient.createBooking(expectedBody);
         assertThat(response.statusCode()).isEqualTo(200);
 
@@ -49,19 +51,13 @@ public class BookingTest extends BaseApiTest {
     }
 
     @Test
+    @DisplayName("Полное обновление букинга")
     void updateBookingTest() {
+        Integer bookingId = bookingSteps.createBooking().getBookingid();
 
-        /*String token = bookingClient.auth(USER, PASSWORD)
-                .as(AuthResponse.class)
-                .getToken();*/
-
-        Response createResp = bookingClient
-                .createBooking(buildBookingRequest());
-                assertThat(createResp.getStatusCode()).isEqualTo(200);
-
-        CreateBookingDTO bookingReq = buildBookingRequest();
+        CreateBookingDTO bookingReq = randomBooking();
         Response updateResp = bookingClient
-                .updateBooking(bookingReq, createResp.as(CreateBookingResponse.class).getBookingid());
+                .updateBooking(bookingReq, bookingId);
                 assertThat(updateResp.getStatusCode()).isEqualTo(200);
 
         CreateBookingDTO updateBookingDTO = updateResp.as(CreateBookingDTO.class);
@@ -70,16 +66,15 @@ public class BookingTest extends BaseApiTest {
     }
 
     @Test
+    @DisplayName("Частичное обновление букинга")
     void partialUpdateBookingTest() {
 
-        Response createResp = bookingClient
-                .createBooking(buildBookingRequest());
-        assertThat(createResp.getStatusCode()).isEqualTo(200);
+        Integer bookingId = bookingSteps.createBooking().getBookingid();
 
         CreateBookingDTO bookingReq = new CreateBookingDTO(faker.football().players(),faker.number().numberBetween(10001, 12000),"2026-01-02");
 
         Response updateResp = bookingClient
-                .partialUpdateBooking(bookingReq, createResp.as(CreateBookingResponse.class).getBookingid());
+                .partialUpdateBooking(bookingReq, bookingId);
         assertThat(updateResp.getStatusCode()).isEqualTo(200);
 
         CreateBookingDTO updateBookingDTO = updateResp.as(CreateBookingDTO.class);
@@ -90,19 +85,46 @@ public class BookingTest extends BaseApiTest {
     }
 
     @Test
+    @DisplayName("Удаление букинга")
     void deleteBookingTest() {
-        Response createResp = bookingClient
-                .createBooking(buildBookingRequest());
-        assertThat(createResp.getStatusCode()).isEqualTo(200);
+        Integer bookingId = bookingSteps.createBooking().getBookingid();
 
-        Integer bookingId = createResp.as(CreateBookingResponse.class).getBookingid();
         Response deleteResp = bookingClient
-                .deleteBooking(createResp.as(CreateBookingResponse.class).getBookingid());
+                .deleteBooking(bookingId);
         assertThat(deleteResp.getStatusCode()).isEqualTo(201);
 
         Response getResp = bookingClient
                 .getBooking(bookingId);
         assertThat(getResp.getStatusCode()).isEqualTo(404);
+
+    }
+
+    @Test
+    @DisplayName("Валидация наличия букинга")
+    void getBookingTest() {
+        CreateBookingResponse booking = bookingSteps.createBooking();
+
+        Response createResp = bookingClient.getBooking(booking.getBookingid());
+        assertThat(createResp.getStatusCode()).isEqualTo(200);
+
+        BookingSteps.bookingsShouldBeEqual(booking.getBooking(), createResp.as(CreateBookingDTO.class));
+
+    }
+
+    @Test
+    @DisplayName("Получение bookindid па параметру lastname")
+    void getBookingsByLastName() {
+        String lastName = faker.name().lastName();
+        int bookingQuantity = 5;
+
+        List<Integer> bookingIds = bookingSteps.generateBookings(bookingQuantity, lastName);
+
+        Response resp = bookingClient.getBookings(Map.of("lastname", lastName));
+        assertThat(resp.getStatusCode()).isEqualTo(200);
+
+        List<BookingId> bookings =resp.as(new TypeRef<List<BookingId>>() {});
+
+        BookingSteps.bookingListShouldBeValid(bookings,bookingIds, bookingQuantity);
 
     }
 

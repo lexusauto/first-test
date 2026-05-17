@@ -1,10 +1,13 @@
 package booking.dto;
 
 import booking.config.BookingConfig;
+import io.qameta.allure.Step;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+
+import java.util.Map;
 
 import static booking.config.BookingApiConfig.getBookingConfig;
 import static io.restassured.RestAssured.given;
@@ -14,50 +17,67 @@ public class BookingApiClient {
     private static final BookingConfig config = getBookingConfig();
 
     private RequestSpecification spec = new RequestSpecBuilder()
+            .setBaseUri(config.bookingUrl())
             .setContentType(ContentType.JSON).build();
 
+    @Step("Выполнить запрос POST /auth")
     public Response auth(String user, String password) {
         return given(spec)
                 .body(new AuthRequest(user, password))
 
-                .post(config.bookingUrl() + "/auth")
+                .post("/auth")
                 .then()
                 .extract().response();
     }
 
+    @Step("Выполнить запрос POST /booking")
     public Response createBooking(CreateBookingDTO createBookingDTO) {
         return given(spec)
                 .body(createBookingDTO)
-                .post(config.bookingUrl() + "/booking")
+                .post("/booking")
                 .then()
                 .extract().response();
     }
 
+    @Step("Выполнить запрос PATCH /booking/{id}")
     public Response partialUpdateBooking
             (CreateBookingDTO createBookingDTO, Integer id) {
         return given(spec)
                 .cookie("token", getToken())
                 .body(createBookingDTO)
                 .pathParam("BOOKING_ID", id)
-                .patch(config.bookingUrl() + "/booking/{BOOKING_ID}")
+                .patch("/booking/{BOOKING_ID}")
                 .then()
                 .extract().response();
     }
 
+    @Step("Выполнить запрос GET /booking/{id}")
     public Response getBooking (Integer id) {
-        return given()
+        return given(spec)
                 .pathParam("BOOKING_ID", id)
-                .get(config.bookingUrl()+ "/booking/{BOOKING_ID}")
+                .get("/booking/{BOOKING_ID}")
                 .then()
                 .extract().response();
 
     }
 
+    @Step("Выполнить запрос GET /booking?{queryParams}")
+    public Response getBookings (Map<String, Object> queryParams) {
+        return given(spec)
+                .queryParams(queryParams)
+                .log().params()
+                .get("/booking")
+                .then()
+                .extract().response();
+
+    }
+
+    @Step("Выполнить запрос DELETE /booking/{id}")
     public Response deleteBooking (Integer id) {
-      return given()
+      return given(spec)
               .cookie("token", getToken())
               .pathParam("BOOKING_ID", id)
-              .delete(config.bookingUrl()+ "/booking/{BOOKING_ID}")
+              .delete("/booking/{BOOKING_ID}")
               .then()
               .extract().response();
 
@@ -65,12 +85,14 @@ public class BookingApiClient {
 
 
 
+
+    @Step("Выполнить запрос PUT /booking/{id}")
     public Response updateBooking(CreateBookingDTO createBookingDTO, Integer id) {
         return given(spec)
                 .cookie("token", getToken())
                 .body(createBookingDTO)
                 .pathParam("BOOKING_ID", id)
-                .put(config.bookingUrl() + "/booking/{BOOKING_ID}")
+                .put("/booking/{BOOKING_ID}")
                 .then()
                 .extract().response();
     }
